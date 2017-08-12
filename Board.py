@@ -7,6 +7,8 @@ from random import randint
 
 from GamePiece import *
 
+from keyAugment import *
+
 class Board:
     def __init__(self, player, screen, offset, width, height, board_width, board_height):
         self.player = player
@@ -35,6 +37,7 @@ class Board:
         self.overfont = pygame.font.SysFont("monospace", 40)
         self.game_over = False
         self.can_hold = True
+        self.keyAugment = keyAugment()
 
     def pause(self):
         self.running = not self.running
@@ -67,6 +70,7 @@ class Board:
             elif key == K_p:
                 self.pause()
             elif key == K_ESCAPE:
+                self.keyAugment.save_keys()
                 pygame.quit()
                 sys.exit()
         elif self.player == 2:
@@ -96,6 +100,7 @@ class Board:
             elif key == K_p:
                 self.pause()
             elif key == K_ESCAPE:
+                self.keyAugment.save_keys()
                 pygame.quit()
                 sys.exit()
 
@@ -104,8 +109,10 @@ class Board:
             self.check_game()
 
             if not self.game_over:
-                for event in pygame.event.get():
+                print(self.grid)
+                for event in self.keyAugment.intercept_keys():
                     if event.type == QUIT:
+                        self.keyAugment.save_keys()
                         pygame.quit()
                         sys.exit()
                     elif event.type == KEYDOWN:
@@ -144,9 +151,11 @@ class Board:
 
                 for event in pygame.event.get():
                     if event.type == QUIT:
+                        self.keyAugment.save_keys()
                         pygame.quit()
                         sys.exit()
                     elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                        self.keyAugment.save_keys()
                         pygame.quit()
                         sys.exit()
 
