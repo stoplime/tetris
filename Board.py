@@ -8,6 +8,7 @@ from random import randint
 from GamePiece import *
 
 from keyAugment import *
+from imageCapture import *
 
 class Board:
     def __init__(self, player, screen, offset, width, height, board_width, board_height):
@@ -38,6 +39,7 @@ class Board:
         self.game_over = False
         self.can_hold = True
         self.keyAugment = keyAugment()
+        self.imageCapture = imageCapture()
 
     def pause(self):
         self.running = not self.running
@@ -45,6 +47,7 @@ class Board:
     def key_handler(self, key):
         if self.player == 1:
             if key == K_DOWN:
+                self.imageCapture.get_current_image()
                 if not self.active_piece.move_down():
                     self.integrate()
             elif key == K_LEFT:
@@ -109,7 +112,7 @@ class Board:
             self.check_game()
 
             if not self.game_over:
-                print(self.grid)
+                # print(self.grid)
                 for event in self.keyAugment.intercept_keys():
                     if event.type == QUIT:
                         self.keyAugment.save_keys()
